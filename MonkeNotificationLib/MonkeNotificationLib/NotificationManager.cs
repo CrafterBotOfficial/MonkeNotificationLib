@@ -24,7 +24,7 @@ namespace MonkeNotificationLib
                 AssetBundle assetBundle = AssetBundle.LoadFromStream(stream);
 
                 ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
-                ConsoleCanvasObject.transform.SetParent(GameObject.Find("Global/Local VRRig/Local Gorilla Player/rig/body/head/").transform);
+                ConsoleCanvasObject.transform.SetParent(GorillaTagger.Instance.offlineVRRig.transform.Find("rig/body/head/").transform);
                 ConsoleCanvasObject.transform.localPosition = new Vector3(-0.816f, -0.157f, 1.604f);// new Vector3(-0.816f, -0.057f, 1.304f);
                 ConsoleCanvasObject.transform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f); // Quaternion.Euler(-7.609f, 0, 0);
 
