@@ -25,13 +25,13 @@ namespace MonkeNotificationLib
 
                 ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
                 ConsoleCanvasObject.transform.SetParent(GameObject.Find("Global/Local VRRig/Local Gorilla Player/rig/body/head/").transform);
-                ConsoleCanvasObject.transform.localPosition = new Vector3(-0.816f, -0.057f, 1.304f);
+                ConsoleCanvasObject.transform.localPosition = new Vector3(-0.816f, -0.157f, 1.604f);// new Vector3(-0.816f, -0.057f, 1.304f);
                 ConsoleCanvasObject.transform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f); // Quaternion.Euler(-7.609f, 0, 0);
 
                 ConsoleLinePrefab = ConsoleCanvasObject.transform.GetChild(0).gameObject;
                 ConsoleLinePrefab.SetActive(false);
 
-                const int linePoolAmount = 350;
+                const int linePoolAmount = 550; // Object pool is very high bc I dont know what ppl will be spamming
                 for (int i = 0; i < linePoolAmount; i++)
                 {
                     var newLine = GameObject.Instantiate(ConsoleLinePrefab, ConsoleCanvasObject.transform);
@@ -43,10 +43,10 @@ namespace MonkeNotificationLib
             _initialized = true;
         }
 
-        internal void NewLine(string text)
+        internal Text NewLine(string text)
         {
             if (!_initialized || !Main.Instance.enabled)
-                return;
+                return null;
             if (_availableLines == 0)
             {
                 Main.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + _linePool.Count, BepInEx.Logging.LogLevel.Warning);
@@ -58,7 +58,7 @@ namespace MonkeNotificationLib
             newLine.gameObject.AddComponent<Behaviours.TextEffect>().Delay = 3;
             newLine.gameObject.SetActive(true);
 
-            // force fix for the font having missing characters and the text being reset to the default font
+            return newLine;
         }
 
         internal async void FadeOutLine(GameObject line)

@@ -1,42 +1,32 @@
-﻿/*
-    A very inefficent example, but you can see how easy it is to spawn a notification.
-*/
-using BepInEx;
+﻿using BepInEx;
+using ExitGames.Client.Photon;
 using MonkeNotificationLib;
-using UnityEngine.XR;
+using Photon.Realtime;
 
 namespace Example
 {
     [BepInPlugin("crafterbot.notificationlib.example", "Example Notification Plugin", "1.0.0")]
-    public class MyPluginEntryPoint : BaseUnityPlugin
+    public class MyPluginEntryPoint : BaseUnityPlugin, IInRoomCallbacks
     {
-        public static MyPluginEntryPoint Instance;
-
-        private bool _triggerOneShot;
-
-        private void Awake()
+        private void Start()
         {
-            Instance = this;
+            Photon.Pun.PhotonNetwork.AddCallbackTarget(this);
         }
 
-        private void Update()
+        #region Callbacks
+        public void OnPlayerEnteredRoom(Player newPlayer)
         {
-            if (UniverseLib.Input.InputManager.GetKeyDown(UnityEngine.KeyCode.T))
-            {
-                NotificationController.AppendMessage("Example", "You pressed T!", true);
-            }
-
-            InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.grip, out float value);
-            if (value > 0.5f)
-            {
-                if (!_triggerOneShot)
-                {
-                    _triggerOneShot = true;
-                    NotificationController.AppendMessage("Criticial Error".WrapColor("red"), "You pressed your grip :P", true);
-                }
-                return;
-            }
-            _triggerOneShot = false;
+            NotificationController.AppendMessage("Room Event", $"{newPlayer.NickName} has entered the room.");
         }
+
+        public void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            NotificationController.AppendMessage("Room Event", $"{otherPlayer.NickName} has left the room.");
+        }
+
+        public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {/*throw new System.NotImplementedException();*/}
+        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {/*throw new System.NotImplementedException();*/}
+        public void OnMasterClientSwitched(Player newMasterClient) {/*throw new System.NotImplementedException();*/ }
+        #endregion
     }
 }
