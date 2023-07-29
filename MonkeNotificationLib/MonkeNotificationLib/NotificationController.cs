@@ -31,6 +31,7 @@ namespace MonkeNotificationLib
         /// (may add more later)</summary>
         public static string WrapColor(this string str, string color)
         {
+            // Also I know Unity has rich text colors, but I perfer these colors over the presets.
             Dictionary<string, string> colorMap = new Dictionary<string, string>()
             {
                 { "green", "09ff00" },
