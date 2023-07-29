@@ -60,8 +60,10 @@ namespace MonkeNotificationLib
             Text newLine = _linePool.First(x => !x.gameObject.activeSelf);
             newLine.text = text;
             newLine.color = Color.white;
-            newLine.gameObject.AddComponent<Behaviours.TextEffect>().Delay = 3;
-            newLine.gameObject.SetActive(true);
+            GameObject newLineObject=  newLine.gameObject;
+            newLineObject.AddComponent<Behaviours.TextEffect>().Delay = 3;
+            newLineObject.SetActive(true);
+            newLineObject.transform.SetAsFirstSibling();
 
             return newLine;
         }
@@ -76,8 +78,6 @@ namespace MonkeNotificationLib
             }
             Object.Destroy(line.GetComponent<Behaviours.TextEffect>());
             line.SetActive(false);
-
-            line.transform.SetAsFirstSibling();
         }
     }
 }
