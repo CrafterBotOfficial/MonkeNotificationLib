@@ -29,6 +29,11 @@ namespace MonkeNotificationLib
                 ConsoleCanvasObject.transform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f); // Quaternion.Euler(-7.609f, 0, 0);
 
                 ConsoleLinePrefab = ConsoleCanvasObject.transform.GetChild(0).gameObject;
+                Text prefabText = ConsoleLinePrefab.GetComponent<Text>();
+                Material newMaterial = GameObject.Instantiate(prefabText.material);
+                newMaterial.shader = Shader.Find("GUI/Text Shader");
+                prefabText.material = newMaterial;
+
                 ConsoleLinePrefab.SetActive(false);
 
                 const int linePoolAmount = 550; // Object pool is very high bc I dont know what ppl will be spamming
