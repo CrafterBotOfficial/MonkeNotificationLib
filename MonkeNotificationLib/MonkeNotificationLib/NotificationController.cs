@@ -34,9 +34,9 @@ namespace MonkeNotificationLib
             // Also I know Unity has rich text colors, but I perfer these colors over the presets.
             Dictionary<string, string> colorMap = new Dictionary<string, string>()
             {
-                { "green", "09ff00" },
-                { "red", "ff0800" },
-                { "gray", "ffffff50" }
+                { "green", "#09ff00" },
+                { "red", "#ff0800" },
+                { "gray", "#ffffff50" }
             };
             colorMap.TryGetValue(color, out color);
             return $"<color={color}>{str}</color>";
