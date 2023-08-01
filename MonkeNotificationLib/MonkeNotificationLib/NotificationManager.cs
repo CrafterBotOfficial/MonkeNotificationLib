@@ -38,14 +38,17 @@ namespace MonkeNotificationLib
 
                 const int linePoolAmount = 550; // Object pool is very high bc I dont know what ppl will be spamming
                 for (int i = 0; i < linePoolAmount; i++)
-                {
-                    var newLine = GameObject.Instantiate(ConsoleLinePrefab, ConsoleCanvasObject.transform);
-                    _linePool.Add(newLine.GetComponent<Text>());
-                    _linePool[i].enabled = true;
-                }
+                    AddLineToPool();
                 assetBundle.Unload(false);
             }
             _initialized = true;
+        }
+
+        private void AddLineToPool()
+        {
+            var newLine = GameObject.Instantiate(ConsoleLinePrefab, ConsoleCanvasObject.transform);
+            _linePool.Add(newLine.GetComponent<Text>());
+            // _linePool.Last().enabled = true;
         }
 
         internal Text NewLine(string text, float fadeOutDelay = 3)
@@ -55,12 +58,13 @@ namespace MonkeNotificationLib
             if (_availableLines == 0)
             {
                 Main.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + _linePool.Count, BepInEx.Logging.LogLevel.Warning);
-                _linePool.Add(GameObject.Instantiate(ConsoleLinePrefab, ConsoleCanvasObject.transform).GetComponent<Text>());
+                AddLineToPool();
             }
+
             Text newLine = _linePool.First(x => !x.gameObject.activeSelf);
             newLine.text = text;
             newLine.color = Color.white;
-            GameObject newLineObject=  newLine.gameObject;
+            GameObject newLineObject = newLine.gameObject;
             newLineObject.AddComponent<Behaviours.TextEffect>().Delay = fadeOutDelay;
             newLineObject.SetActive(true);
             newLineObject.transform.SetAsFirstSibling();
