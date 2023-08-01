@@ -48,7 +48,7 @@ namespace MonkeNotificationLib
             _initialized = true;
         }
 
-        internal Text NewLine(string text)
+        internal Text NewLine(string text, float fadeOutDelay = 3)
         {
             if (!_initialized || !Main.Instance.enabled)
                 return null;
@@ -61,7 +61,7 @@ namespace MonkeNotificationLib
             newLine.text = text;
             newLine.color = Color.white;
             GameObject newLineObject=  newLine.gameObject;
-            newLineObject.AddComponent<Behaviours.TextEffect>().Delay = 3;
+            newLineObject.AddComponent<Behaviours.TextEffect>().Delay = fadeOutDelay;
             newLineObject.SetActive(true);
             newLineObject.transform.SetAsFirstSibling();
 

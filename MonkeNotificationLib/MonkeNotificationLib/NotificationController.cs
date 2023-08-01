@@ -10,19 +10,21 @@ namespace MonkeNotificationLib
         /// Pulls a text object from the object pool and sets the text to '[{timestamp : {source}] {message}'
         /// </summary>
         /// <param name="includeTimeStamp">Default false | Should there be a timestamp?</param>
+        /// <param name="fadeOutDelay">How long should the text stay on screen before it begins to fade out?</param>
         /// <returns>The text that was pulled from the pool.</returns>
-        public static Text AppendMessage(string source, string message, bool includeTimeStamp = false)
+        public static Text AppendMessage(string source, string message, bool includeTimeStamp = false, float fadeOutDelay = 3)
         {
             string timeStampt = includeTimeStamp ? $"[{System.DateTime.Now.ToString("hh:mm:ss")} : " : "";
             string messageFormat = $"<b>[{timeStampt}{source}]</b> {message}";
-            return NotificationManager.Instance?.NewLine(messageFormat);
+            return NotificationManager.Instance?.NewLine(messageFormat, fadeOutDelay);
         }
         /// <summary>
         /// Pulls a text object from the object pool and sets the text to your text.
         /// </summary>
+        /// <param name="fadeOutDelay">How long should the text stay on screen before it begins to fade out?</param>
         /// <returns>The text that was pulled from the pool.</returns>
-        public static Text AppendMessage(string message) =>
-            NotificationManager.Instance?.NewLine(message);
+        public static Text AppendMessage(string message, float fadeOutDelay) =>
+            NotificationManager.Instance?.NewLine(message, fadeOutDelay);
 
 
         /* Extension methods */
