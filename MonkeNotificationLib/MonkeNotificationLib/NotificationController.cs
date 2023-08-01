@@ -38,7 +38,7 @@ namespace MonkeNotificationLib
                 { "red", "ff0800" },
                 { "gray", "ffffff50" }
             };
-            colorMap.TryGetValue(color, out color);
+            colorMap.TryGetValue(color.ToLower(), out color);
             return $"<color=#{color}>{str}</color>";
         }
     }
