@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Example
 {
-    internal class Callbacks : IInRoomCallbacks, IOnEventCallback, IPunOwnershipCallbacks
+    internal class Callbacks : IInRoomCallbacks, IOnEventCallback
     {
         internal Callbacks() =>
             Photon.Pun.PhotonNetwork.AddCallbackTarget(this);
@@ -48,15 +48,6 @@ namespace Example
                 }
             }
         }
-        #endregion
-
-        #region IPunOwnershipCallbacks
-        void IPunOwnershipCallbacks.OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
-            => NotificationController.AppendMessage("Room Event", $"{requestingPlayer.NickName} has requested master client.");
-
-        void IPunOwnershipCallbacks.OnOwnershipTransfered(PhotonView targetView, Player previousOwner) { }
-
-        void IPunOwnershipCallbacks.OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest) { }
         #endregion
     }
 }
