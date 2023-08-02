@@ -14,17 +14,23 @@ namespace Example
 
         void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)
         {
-            NotificationController.AppendMessage("Room Event", $"{newPlayer.NickName} has entered the room.");
+            NotificationController.AppendMessage("Room Event", $"{newPlayer.NickName} has entered the room.".WrapColor("green"));
         }
 
         void IInRoomCallbacks.OnPlayerLeftRoom(Player otherPlayer)
         {
-            NotificationController.AppendMessage("Room Event", $"{otherPlayer.NickName} has left the room.");
+            NotificationController.AppendMessage("Room Event", $"{otherPlayer.NickName} has left the room.".WrapColor("green"));
         }
 
         void IInRoomCallbacks.OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {/*throw new NotImplementedException();*/}
-        void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient) {/*throw new NotImplementedException();*/}
-        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {/*throw new NotImplementedException();*/}
+        void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
+        {
+            NotificationController.AppendMessage("Player Event", $"{newMasterClient.NickName} is now the master client for the server.".WrapColor("green"));
+        }
+        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        {
+            NotificationController.AppendMessage("Room Event", "The room properties have been altered, possible gamemode change attempt?".WrapColor("red"));
+        }
         #endregion
 
         #region IOnEventCallback
