@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Example
 {
-    internal class Callbacks : IInRoomCallbacks, IOnEventCallback
+    internal class Callbacks : IInRoomCallbacks, IOnEventCallback, IPunOwnershipCallbacks
     {
         internal Callbacks() =>
             Photon.Pun.PhotonNetwork.AddCallbackTarget(this);
@@ -23,8 +23,14 @@ namespace Example
         }
 
         void IInRoomCallbacks.OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {/*throw new NotImplementedException();*/}
-        void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient) {/*throw new NotImplementedException();*/}
-        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {/*throw new NotImplementedException();*/}
+        void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
+        {
+            NotificationController.AppendMessage("Player Event", $"{newMasterClient.NickName} is now the master client for the server.");
+        }
+        void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        {
+            NotificationController.AppendMessage("Room Event", "The room properties have been altered, possible gamemode change attempt?");
+        }
         #endregion
 
         #region IOnEventCallback
@@ -42,6 +48,15 @@ namespace Example
                 }
             }
         }
+        #endregion
+
+        #region IPunOwnershipCallbacks
+        void IPunOwnershipCallbacks.OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
+            => NotificationController.AppendMessage("Room Event", $"{requestingPlayer.NickName} has requested master client.");
+
+        void IPunOwnershipCallbacks.OnOwnershipTransfered(PhotonView targetView, Player previousOwner) { }
+
+        void IPunOwnershipCallbacks.OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest) { }
         #endregion
     }
 }
