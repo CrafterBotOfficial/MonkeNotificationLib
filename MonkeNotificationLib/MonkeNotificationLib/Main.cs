@@ -15,8 +15,15 @@ namespace MonkeNotificationLib
         }
 
         internal static void Log(object data, LogLevel logLevel = LogLevel.Info)
-            => Instance.Logger.Log(logLevel, data);
-
+        {
+            if (Instance is object)
+            {
+                Instance.Logger.Log(logLevel, data);
+                return;
+            }
+            UnityEngine.Debug.Log($"[NotificationLib : {System.Enum.GetName(typeof(LogLevel), loglevel)}]" + data);
+        }
+        
         #region Enable/Disable
         private void OnEnable() { }
         private void OnDisable() { }
