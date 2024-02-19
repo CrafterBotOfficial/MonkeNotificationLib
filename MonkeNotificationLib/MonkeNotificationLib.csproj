@@ -1,0 +1,74 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+
+    <GamePath>D:\Games\Oculus\Software\another-axiom-gorilla-tag</GamePath>
+    <ManagedFilesPath>\Gorilla Tag_Data\Managed\</ManagedFilesPath>
+  </PropertyGroup>
+
+  <Target Name="Copy" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(GamePath)/BepInEx/plugins/MonkeNotificationLib/MonkeNotificationLib.dll" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
+
+    <Reference Include="0Harmony">
+      <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp" Publicize="true">
+      <HintPath>$(GamePath)$(ManagedFilesPath)Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(GamePath)$(ManagedFilesPath)Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon3Unity3D">
+      <HintPath>$(GamePath)$(ManagedFilesPath)Photon3Unity3D.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonRealtime">
+      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonRealtime.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking">
+      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonUnityNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking.Utilities">
+      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonUnityNetworking.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="UnityEngine">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Utilla">
+      <HintPath>$(GamePath)\BepInEx\plugins\Utilla\Utilla.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
