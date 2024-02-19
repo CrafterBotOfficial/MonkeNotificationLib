@@ -1,30 +1,20 @@
-﻿using BepInEx;
-using BepInEx.Logging;
-using HarmonyLib;
+﻿using MelonLoader;
+
+[assembly: MelonInfo(typeof(MonkeNotificationLib.Main), "MonkeNotificationLib", "1.0.2", "Crafterbot")]
+[assembly: MelonGame("Another Axiom", "Gorilla Tag")]
 
 namespace MonkeNotificationLib;
 
-[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.2")]
-internal class Main : BaseUnityPlugin
+internal class Main : MelonMod
 {
-    public static Main Instance;
-    private Harmony harmony;
-
-    private void Start()
+    public override void OnInitializeMelon()
     {
-        Instance = this;
-
-        harmony = new Harmony(Info.Metadata.GUID);
-        harmony.PatchAll();
+        GorillaTagger.OnPlayerSpawned(Load);
     }
 
-    public static void Log(object data, LogLevel level = LogLevel.Info)
+    private void Load()
     {
-        Instance?.Logger.Log(level, data);
+        new NotificationManager();
+        NotificationController.AppendMessage("MonkeNotificationLib", "Loaded!");
     }
-
-    #region Enable/Disable
-    private void OnEnable() { }
-    private void OnDisable() { }
-    #endregion
 }
