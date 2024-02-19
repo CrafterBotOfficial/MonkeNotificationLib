@@ -1,32 +1,30 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using HarmonyLib;
 
-namespace MonkeNotificationLib
+namespace MonkeNotificationLib;
+
+[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.2")]
+internal class Main : BaseUnityPlugin
 {
-    [BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.2")]
-    internal class Main : BaseUnityPlugin
+    public static Main Instance;
+    private Harmony harmony;
+
+    private void Start()
     {
-        internal static Main Instance;
+        Instance = this;
 
-        private void Start()
-        {
-            Instance = this;
-            new HarmonyLib.Harmony(Info.Metadata.GUID).PatchAll(typeof(Patches));
-        }
-
-        internal static void Log(object data, LogLevel logLevel = LogLevel.Info)
-        {
-            if (Instance is object)
-            {
-                Instance.Logger.Log(logLevel, data);
-                return;
-            }
-            UnityEngine.Debug.Log($"[NotificationLib : {System.Enum.GetName(typeof(LogLevel), loglevel)}]" + data);
-        }
-        
-        #region Enable/Disable
-        private void OnEnable() { }
-        private void OnDisable() { }
-        #endregion
+        harmony = new Harmony(Info.Metadata.GUID);
+        harmony.PatchAll();
     }
+
+    public static void Log(object data, LogLevel level = LogLevel.Info)
+    {
+        Instance?.Logger.Log(level, data);
+    }
+
+    #region Enable/Disable
+    private void OnEnable() { }
+    private void OnDisable() { }
+    #endregion
 }
