@@ -13,6 +13,14 @@
   </Target>
 
   <ItemGroup>
+    <None Remove="Resources\console" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\console" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
 
     <Reference Include="0Harmony">

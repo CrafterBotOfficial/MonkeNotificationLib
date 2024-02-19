@@ -24,6 +24,9 @@
     <Reference Include="BepInEx">
       <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="MonkeNotificationLib">
+      <HintPath>$(GamePath)\BepInEx\plugins/MonkeNotificationLib/MonkeNotificationLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GamePath)$(ManagedFilesPath)Newtonsoft.Json.dll</HintPath>
     </Reference>
