@@ -1,26 +1,24 @@
-﻿using BepInEx;
+﻿#if BEPINEX
+
+using BepInEx;
 using BepInEx.Logging;
-using HarmonyLib;
 
 namespace MonkeNotificationLib;
 
-[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.2")]
+[BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
 internal class Main : BaseUnityPlugin
 {
     public static Main Instance;
-    private Harmony harmony;
 
     private void Start()
     {
         Instance = this;
-
-        harmony = new Harmony(Info.Metadata.GUID);
-        harmony.PatchAll();
+        HarmonyLib.Harmony.CreateAndPatchAll(System.Reflection.Assembly.GetExecutingAssembly());
     }
 
-    public static void Log(object data, LogLevel level = LogLevel.Info)
+    public void Log(object data, LogLevel level = LogLevel.Info)
     {
-        Instance?.Logger.Log(level, data);
+        Logger.Log(level, data);
     }
 
     #region Enable/Disable
@@ -28,3 +26,27 @@ internal class Main : BaseUnityPlugin
     private void OnDisable() { }
     #endregion
 }
+
+#elif MELONLOADER
+
+using MelonLoader;
+using MonkeNotificationLib;
+
+[assembly: MelonInfo(typeof(MonkeNotificationLib.Main), PluginInfo.Name, PluginInfo.Version, PluginInfo.Author)]
+[assembly: MelonColor(106, 0 ,10 ,15)]
+
+namespace MonkeNotificationLib;
+
+internal class Main : MelonMod
+{
+    public static Main Instance;
+
+    public bool enabled = true; // Not bothering to impliment bc all mods that use it wont work with Melons
+
+    public override void OnInitializeMelon()
+    {
+        Instance = this;
+    }
+}
+
+#endif
