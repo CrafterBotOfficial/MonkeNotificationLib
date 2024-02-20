@@ -4,17 +4,16 @@
     <TargetFramework>net472</TargetFramework>
     <LangVersion>latest</LangVersion>
 
-    <GamePath>D:\Games\Oculus\Software\another-axiom-gorilla-tag</GamePath>
+    <GamePath>D:\Games\Oculus\Software\another-axiom-gorilla-tag - Copy</GamePath>
     <ManagedFilesPath>\Gorilla Tag_Data\Managed\</ManagedFilesPath>
+    <MelonLoaderPath>$(GamePath)/MelonLoader\net6</MelonLoaderPath>
+    
+    <Configurations>BepInEx;MelonLoader</Configurations>
   </PropertyGroup>
 
   <Target Name="Copy" AfterTargets="Build">
     <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(GamePath)/BepInEx/plugins/MonkeNotificationLib/MonkeNotificationLib.dll" />
   </Target>
-
-  <ItemGroup>
-    <None Remove="Resources\console" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\console" />
@@ -25,6 +24,12 @@
 
     <Reference Include="0Harmony">
       <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Melon">
+      <HintPath>$(MelonLoaderPath)\MelonLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Melon0Harmony">
+      <HintPath>$(MelonLoaderPath)\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp" Publicize="true">
       <HintPath>$(GamePath)$(ManagedFilesPath)Assembly-CSharp.dll</HintPath>

@@ -19,7 +19,7 @@ internal class NotificationManager
     public NotificationManager()
     {
         Instance = this;
-        Main.Log("Initializing notification manager", BepInEx.Logging.LogLevel.Message);
+        PluginInfo.Log("Initializing notification manager");
         using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonkeNotificationLib.Resources.console"))
         {
             AssetBundle assetBundle = AssetBundle.LoadFromStream(stream);
@@ -56,7 +56,7 @@ internal class NotificationManager
         if (!initialized || !Main.Instance.enabled) return null;
         if (availableLines == 0)
         {
-            Main.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + linePool.Count, BepInEx.Logging.LogLevel.Warning);
+            PluginInfo.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + linePool.Count, true);
             AddLineToPool();
         }
 
