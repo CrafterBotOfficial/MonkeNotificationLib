@@ -13,35 +13,34 @@ internal class NotificationManager
     public GameObject ConsoleCanvasObject;
     public GameObject ConsoleLinePrefab;
 
-    private int availableLines => linePool.Count(x => !x.gameObject.activeSelf); 
+    private int availableLines => linePool.Count(x => !x.gameObject.activeSelf);
     private List<Text> linePool = new List<Text>();
 
     public NotificationManager()
     {
         Instance = this;
-        PluginInfo.Log("Initializing notification manager");
-        using (var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonkeNotificationLib.Resources.console"))
-        {
-            AssetBundle assetBundle = AssetBundle.LoadFromStream(stream);
+        Main.Log("Initializing notification manager");
+        using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonkeNotificationLib.Resources.console");
+        AssetBundle assetBundle = AssetBundle.LoadFromStream(stream);
 
-            ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
-            Transform consoleTransform = ConsoleCanvasObject.transform;
-            consoleTransform.SetParent(GorillaTagger.Instance.offlineVRRig.transform.Find("rig/body/head/").transform);
-            consoleTransform.localPosition = new Vector3(-0.816f, -0.157f, 1.604f);
-            consoleTransform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f);
+        ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
+        Transform consoleTransform = ConsoleCanvasObject.transform;
+        consoleTransform.SetParent(GorillaTagger.Instance.offlineVRRig.transform.Find("RigAnchor/rig/body/head")); // <--------------------------
+        consoleTransform.localPosition = new Vector3(-0.816f, -0.157f, 1.604f);
+        consoleTransform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f);
 
-            ConsoleLinePrefab = consoleTransform.GetChild(0).gameObject;
-            Text prefabText = ConsoleLinePrefab.GetComponent<Text>();
-            Material newMaterial = GameObject.Instantiate(prefabText.material);
-            newMaterial.shader = Shader.Find("GUI/Text Shader");
-            prefabText.material = newMaterial;
+        ConsoleLinePrefab = consoleTransform.GetChild(0).gameObject;
+        Text prefabText = ConsoleLinePrefab.GetComponent<Text>();
+        Material newMaterial = GameObject.Instantiate(prefabText.material);
+        newMaterial.shader = Shader.Find("GUI/Text Shader");
+        prefabText.material = newMaterial;
 
-            ConsoleLinePrefab.SetActive(false);
+        ConsoleLinePrefab.SetActive(false);
 
-            const int linePoolAmount = 750;
-            for (int i = 0; i < linePoolAmount; i++) AddLineToPool();
-            assetBundle.Unload(false);
-        }
+        const int linePoolAmount = 150;
+        for (int i = 0; i < linePoolAmount; i++)
+            AddLineToPool();
+        assetBundle.Unload(false);
         initialized = true;
     }
 
@@ -56,7 +55,7 @@ internal class NotificationManager
         if (!initialized || !Main.Instance.enabled) return null;
         if (availableLines == 0)
         {
-            PluginInfo.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + linePool.Count, true);
+            Main.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + linePool.Count);
             AddLineToPool();
         }
 
