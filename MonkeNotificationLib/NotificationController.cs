@@ -12,7 +12,7 @@ public static class NotificationController
     /// <param name="includeTimeStamp">Default false | Should there be a timestamp?</param>
     /// <param name="fadeOutDelay">How long should the text stay on screen before it begins to fade out?</param>
     /// <returns>The text that was pulled from the pool. If null the text wasn't shown.</returns>
-    public static Text AppendMessage(string source, string message, bool includeTimeStamp = false, float fadeOutDelay = 3)
+    public static Text AppendMessage(string source, string message, bool includeTimeStamp = false, float fadeOutDelay = 1.5f)
     {
         string timeStampt = includeTimeStamp ? $"[{System.DateTime.Now.ToString("hh:mm:ss")} : " : "";
         string messageFormat = $"<b>[{timeStampt}{source}]</b> {message}";
