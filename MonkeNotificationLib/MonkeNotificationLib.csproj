@@ -41,7 +41,6 @@
     <Reference Include="PhotonUnityNetworking.Utilities">
       <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/PhotonUnityNetworking.Utilities.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression" />
     <Reference Include="UnityEngine">
       <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
@@ -71,9 +70,6 @@
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="Utilla">
-      <HintPath>$(GORILLATAG_PATH)\BepInEx\plugins\Utilla\Utilla.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

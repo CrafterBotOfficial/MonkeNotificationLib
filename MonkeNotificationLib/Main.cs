@@ -1,9 +1,10 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using UnityEngine;
 
 namespace MonkeNotificationLib;
 
-[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.5")]
+[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.6")]
 internal class Main : BaseUnityPlugin
 {
     public static Main Instance;
@@ -13,11 +14,12 @@ internal class Main : BaseUnityPlugin
     private void Start()
     {
         Instance = this;
-        Utilla.Events.GameInitialized += (sender, args) =>
+        GorillaTagger.OnPlayerSpawned(() =>
         {
             manager = new NotificationManager();
             // NotificationController.AppendMessage("MonkeNotificationLib", "Loaded!");
-        };
+            NotificationController.AppendMessage("MonkeNotificationLib", "Gorilla4824 has been tagged by gorilla6969");
+        });
     }
 
     public static void Log(string message, LogLevel level = LogLevel.Info)
