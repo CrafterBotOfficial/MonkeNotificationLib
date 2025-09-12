@@ -1,77 +1,78 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>latest</LangVersion>
-
-    <GamePath>D:\Games\Oculus\Software\another-axiom-gorilla-tag</GamePath>
-    <ManagedFilesPath>\Gorilla Tag_Data\Managed\</ManagedFilesPath>
   </PropertyGroup>
 
-  <Target Name="Copy" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(GamePath)/BepInEx/plugins/MonkeNotificationLib/Example.dll" />
-  </Target>
+   <!-- Output -->
+    <Target AfterTargets="Build" Name="Output">
+        <Copy SourceFiles="$(TargetPath);bin/Debug/$(TargetFramework)/MonkeNotificationLib.Example.pdb" DestinationFiles="$(GORILLATAG_PATH)/BepInEx/plugins/MonkeNotificationLib.Example/MonkeNotificationLib.Example.dll;$(GORILLATAG_PATH)/BepInEx/plugins/MonkeNotificationLib.Example/MonkeNotificationLib.Example.pdb" />
+    </Target>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
 
+    <Reference Include="MonkeNotificationLib">
+      <HintPath>$(GORILLATAG_PATH)\BepInEx\plugins\MonkeNotificationLib\MonkeNotificationLib.dll</HintPath>
+    </Reference>
+
     <Reference Include="0Harmony">
-      <HintPath>$(GamePath)\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp" Publicize="true">
-      <HintPath>$(GamePath)$(ManagedFilesPath)Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>$(GamePath)\BepInEx\core\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="MonkeNotificationLib">
-      <HintPath>$(GamePath)\BepInEx\plugins/MonkeNotificationLib/MonkeNotificationLib.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>$(GamePath)$(ManagedFilesPath)Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Photon3Unity3D">
-      <HintPath>$(GamePath)$(ManagedFilesPath)Photon3Unity3D.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/Photon3Unity3D.dll</HintPath>
     </Reference>
     <Reference Include="PhotonRealtime">
-      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonRealtime.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/PhotonRealtime.dll</HintPath>
     </Reference>
     <Reference Include="PhotonUnityNetworking">
-      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonUnityNetworking.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/PhotonUnityNetworking.dll</HintPath>
     </Reference>
     <Reference Include="PhotonUnityNetworking.Utilities">
-      <HintPath>$(GamePath)$(ManagedFilesPath)PhotonUnityNetworking.Utilities.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/PhotonUnityNetworking.Utilities.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression" />
     <Reference Include="UnityEngine">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(GamePath)$(ManagedFilesPath)UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UIModule.dll</HintPath>
     </Reference>
     <Reference Include="Utilla">
-      <HintPath>$(GamePath)\BepInEx\plugins\Utilla\Utilla.dll</HintPath>
+      <HintPath>$(GORILLATAG_PATH)\BepInEx\plugins\Utilla\Utilla.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
