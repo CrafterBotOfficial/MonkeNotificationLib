@@ -18,7 +18,6 @@ internal class Main : BaseUnityPlugin
         {
             manager = new NotificationManager();
             // NotificationController.AppendMessage("MonkeNotificationLib", "Loaded!");
-            NotificationController.AppendMessage("MonkeNotificationLib", "Gorilla4824 has been tagged by gorilla6969");
         });
     }
 
