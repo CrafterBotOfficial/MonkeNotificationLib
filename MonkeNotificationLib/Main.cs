@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MonkeNotificationLib;
 
-[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.6")]
+[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.0.7")]
 internal class Main : BaseUnityPlugin
 {
     public static Main Instance;
