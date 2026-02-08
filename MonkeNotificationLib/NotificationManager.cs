@@ -25,7 +25,7 @@ internal class NotificationManager
 
         ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
         Transform consoleTransform = ConsoleCanvasObject.transform;
-        consoleTransform.SetParent(VRRigCache.Instance.localRig.transform.Find("GorillaPlayerNetworkedRigAnchor/rig/body/head")); // <--------------------------
+        consoleTransform.SetParent(VRRigCache.Instance.localRig.transform.Find("rig/head")); // <--------------------------
         const float SCALE_FACTOR = .0175f;
         consoleTransform.localScale = Vector3.one * SCALE_FACTOR;
         consoleTransform.localPosition = new Vector3(-0.55f, -0.3f, 1.604f);

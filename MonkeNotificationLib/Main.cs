@@ -17,7 +17,7 @@ internal class Main : BaseUnityPlugin
         GorillaTagger.OnPlayerSpawned(() =>
         {
             manager = new NotificationManager();
-            // NotificationController.AppendMessage("MonkeNotificationLib", "Loaded!");
+            //NotificationController.AppendMessage("MonkeNotificationLib", "Loaded!");
         });
     }
 
