@@ -1,74 +1,104 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MonkeNotificationLib;
 
 internal class NotificationManager
 {
-    public static NotificationManager Instance;
-    private static bool initialized;
+    private static readonly Lazy<NotificationManager> instance = new(() => new NotificationManager().Setup());
+    public static NotificationManager Instance => instance.Value;
 
-    public GameObject ConsoleCanvasObject;
-    public GameObject ConsoleLinePrefab;
+    public TextMeshPro TextMesh;
 
-    private int availableLines => linePool.Count(x => !x.gameObject.activeSelf);
-    private List<Text> linePool = new List<Text>();
+    private volatile int lineKeyCounter;
+    private ObservableDictionary<int, Line> lines;
 
-    public NotificationManager()
+    private string[] opacity;
+
+    private NotificationManager Setup()
     {
-        Instance = this;
-        Main.Log("Initializing notification manager");
-        using var stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("MonkeNotificationLib.Resources.console");
-        AssetBundle assetBundle = AssetBundle.LoadFromStream(stream);
+        lines = [];
+        lines.CollectionChanged += (_, _) => Build();
+        opacity = [
+            "FF",
+            "EE",
+            "DD",
+            "CC",
+            "BB",
+            "AA",
+            "99",
+            "88",
+            "77",
+            "66",
+            "55",
+            "44",
+            "33",
+            "22",
+            "11",
+            "00",
+        ];
 
-        ConsoleCanvasObject = GameObject.Instantiate(assetBundle.LoadAsset<GameObject>("ConsoleCanvas"));
-        Transform consoleTransform = ConsoleCanvasObject.transform;
-        consoleTransform.SetParent(VRRigCache.Instance.localRig.transform.Find("GorillaPlayerNetworkedRigAnchor/rig/body/head")); // <--------------------------
-        const float SCALE_FACTOR = .0175f;
-        consoleTransform.localScale = Vector3.one * SCALE_FACTOR;
-        consoleTransform.localPosition = new Vector3(-0.55f, -0.3f, 1.604f);
-        consoleTransform.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f);
+        var container = new GameObject().transform;
+        container.SetParent(VRRigCache.Instance.localRig.transform.Find("rig/head"));
+        container.localScale = Vector3.one * .0175f;
+        container.localPosition = new Vector3(-0.55f, -0.3f, 1.604f);
+        container.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f);
 
-        ConsoleLinePrefab = consoleTransform.GetChild(0).gameObject;
-        Text prefabText = ConsoleLinePrefab.GetComponent<Text>();
-        Material newMaterial = GameObject.Instantiate(prefabText.material);
-        newMaterial.shader = Shader.Find("GUI/Text Shader");
-        prefabText.material = newMaterial;
+        TextMesh = container.AddComponent<TextMeshPro>();
+        TextMesh.font = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(x => x.name == "UtopiumPixel SDF"); // Todo: extract old font from assetbundle
+        TextMesh.rectTransform.sizeDelta = new Vector2(100f, 100f);
+        TextMesh.richText = true;
+        TextMesh.fontMaterial.shader = Shader.Find("GUI/Text Shader");
 
-        ConsoleLinePrefab.SetActive(false);
-
-        const int linePoolAmount = 150;
-        for (int i = 0; i < linePoolAmount; i++)
-            AddLineToPool();
-        assetBundle.Unload(false);
-        initialized = true;
+        return this;
     }
 
-    private void AddLineToPool()
+    private void Remove(int id)
     {
-        var newLine = GameObject.Instantiate(ConsoleLinePrefab, ConsoleCanvasObject.transform);
-        linePool.Add(newLine.GetComponent<Text>());
+        if (!lines.ContainsKey(id)) return;
+        lines.Remove(id);
     }
 
-    public Text NewLine(string text, float fadeOutDelay = 3)
+    internal void NewLine(string rawText, float lineFadeoutDelay)
     {
-        if (!initialized || !Main.Instance.enabled) return null;
-        if (availableLines == 0)
+        lineKeyCounter++;
+        var line = new Line(rawText, 0, lineFadeoutDelay);
+        lines.Insert(lineKeyCounter, line);
+        Main.Instance.StartCoroutine(FadeLine(line));
+    }
+
+    private IEnumerator FadeLine(Line line)
+    {
+        var lineId = lineKeyCounter;
+        yield return new WaitForSeconds(5f);
+        while (line.OpacityIndex < opacity.Length)
         {
-            Main.Log("No objects to pull from the pool, manually increasing pool size. current pool size:" + linePool.Count);
-            AddLineToPool();
+            Main.Log($"{line.OpacityIndex}/{opacity.Length}");
+            Build();
+            line.OpacityIndex += 1;
+            yield return new WaitForSeconds(0.1f);
         }
+        lock (lines)
+        {
+            Remove(lineId);
+        }
+    }
 
-        Text newLine = linePool.First(x => !x.gameObject.activeSelf);
-        newLine.text = text;
-        newLine.color = Color.white;
-        GameObject newLineObject = newLine.gameObject;
-        newLineObject.AddComponent<TextEffect>().Delay = fadeOutDelay;
-        newLineObject.SetActive(true);
-        newLineObject.transform.SetAsFirstSibling();
+    private void Build()
+    {
+        var text = string.Empty;
+        foreach (var line in lines) text += $"<alpha=#{opacity[Mathf.Clamp(line.Value.OpacityIndex, 0, opacity.Length - 1)]}>{line.Value.Text}\n";
+        TextMesh.text = text;
+    }
 
-        return newLine;
+    private class Line(string text, int opacityIndex, float lineFadeoutDelay)
+    {
+        public string Text = text;
+        public int OpacityIndex = opacityIndex;
+        public float LineFadeoutDelay = lineFadeoutDelay;
     }
 }
