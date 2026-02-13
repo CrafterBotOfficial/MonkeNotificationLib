@@ -13,19 +13,13 @@ internal class Main : BaseUnityPlugin
     private void Start()
     {
         Instance = this;
-        GorillaTagger.OnPlayerSpawned(async () =>
+        GorillaTagger.OnPlayerSpawned(() =>
         {
-            manager = NotificationManager.Instance;
-
-            // repeat debug line 10 times
+            manager = new NotificationManager().Setup();
 #if DEBUG
-            for (int i = 0; i < 10; i++)
-            {
-                NotificationController.AppendMessage("MonkeNotificationLib", "Test " + i);
-                await System.Threading.Tasks.Task.Delay(500);
-            }
-        });
+            gameObject.AddComponent<Tests.LineSpammer>();
 #endif
+        });
     }
 
     public static void Log(string message, LogLevel level = LogLevel.Info)

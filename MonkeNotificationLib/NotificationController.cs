@@ -7,6 +7,7 @@ namespace MonkeNotificationLib;
 public static class NotificationController
 {
     public const float FADE_DELAY = 1.5f;
+    public const string WHITE = "FFFFFF";
 
     /// <summary>
     /// Pulls a text object from the object pool and sets the text to '[{timestamp : {source}] {message}'
@@ -22,6 +23,12 @@ public static class NotificationController
         return null;
     }
 
+    public static void AppendMessage(string source, string message, string color = WHITE, float fadeOutDelay = FADE_DELAY)
+    {
+        string messageFormat = $"<b>[{source}]</b> {message}";
+        NotificationManager.Instance?.NewLine(messageFormat, fadeOutDelay, color);
+    }
+
     /// <summary>
     /// Pulls a text object from the object pool and sets the text to your text.
     /// </summary>
@@ -33,23 +40,32 @@ public static class NotificationController
         return null;
     }
 
+    public static void AppendMessage(string message, string color = WHITE, float fadeOutDelay = FADE_DELAY)
+    {
+        NotificationManager.Instance?.NewLine(message, fadeOutDelay, color);
+    }
     /* Extension methods */
 
-    /// <summary>Wraps your string in <color="color"></color>. Read the methods code from the Github page to see the presets. 
-    /// (may add more later)</summary>
+    /// <summary>
+    /// Wraps your string in <color="color"></color>. Read the methods code from the Github page to see the presets. 
+    /// Will break opacity during fadeout
+    /// </summary>
+    [System.Obsolete("Will not function properly due to issues with opacity breaking during fadeout")]
     public static string WrapColor(this string str, string color)
     {
-        // Also I know Unity has rich text colors, but I perfer these colors over the presets.
-        colorMapDictionary.TryGetValue(color.ToLower(), out color);
+        COLOR_MAP_DICTIONARY.TryGetValue(color.ToLower(), out color);
         return $"<color=#{color}>{str}</color>";
     }
 
-    private static Dictionary<string, string> colorMapDictionary = new Dictionary<string, string>()
-            {
-                { "green", "09ff00" },
-                { "red", "ff0800" },
-                { "gray", "ffffff50" },
-                { "warning", "f0ad4e" },
-                { "danger", "d9534f" }
-            };
+    public static string GetColor(string color) =>
+        COLOR_MAP_DICTIONARY.TryGetValue(color.ToLower(), out string value) ? value : color;
+
+    private readonly static Dictionary<string, string> COLOR_MAP_DICTIONARY = new Dictionary<string, string>()
+    {
+        { "green", "09ff00" },
+        { "red", "ff0800" },
+        { "gray", "ffffff50" },
+        { "warning", "f0ad4e" },
+        { "danger", "d9534f" }
+    };
 }
