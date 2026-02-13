@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -9,8 +7,7 @@ namespace MonkeNotificationLib;
 
 internal class NotificationManager
 {
-    private static readonly Lazy<NotificationManager> instance = new(() => new NotificationManager().Setup());
-    public static NotificationManager Instance => instance.Value;
+    public static NotificationManager Instance;
 
     public TextMeshPro TextMesh;
 
@@ -19,8 +16,15 @@ internal class NotificationManager
 
     private string[] opacity;
 
-    private NotificationManager Setup()
+    internal NotificationManager Setup()
     {
+        if (Instance is not null)
+        {
+            // throw new System.Exception("Cannot instantiate multiple NotificationManagers. Use NotificationManager.Instance instead.");
+            return Instance;
+        }
+        Instance = this;
+
         lines = [];
         lines.CollectionChanged += (_, _) => Build();
         opacity = [
@@ -63,10 +67,10 @@ internal class NotificationManager
         lines.Remove(id);
     }
 
-    internal void NewLine(string rawText, float lineFadeoutDelay)
+    internal void NewLine(string rawText, float lineFadeoutDelay, string color = NotificationController.WHITE)
     {
         lineKeyCounter++;
-        var line = new Line(rawText, 0, lineFadeoutDelay);
+        var line = new Line(rawText, color, 0, lineFadeoutDelay);
         lines.Insert(lineKeyCounter, line);
         Main.Instance.StartCoroutine(FadeLine(line));
     }
@@ -74,12 +78,12 @@ internal class NotificationManager
     private IEnumerator FadeLine(Line line)
     {
         var lineId = lineKeyCounter;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(line.LineFadeoutDelay);
         while (line.OpacityIndex < opacity.Length)
         {
             Main.Log($"{line.OpacityIndex}/{opacity.Length}");
             Build();
-            line.OpacityIndex += 1;
+            line.OpacityIndex++;
             yield return new WaitForSeconds(0.1f);
         }
         lock (lines)
@@ -91,13 +95,15 @@ internal class NotificationManager
     private void Build()
     {
         var text = string.Empty;
-        foreach (var line in lines) text += $"<alpha=#{opacity[Mathf.Clamp(line.Value.OpacityIndex, 0, opacity.Length - 1)]}>{line.Value.Text}\n";
+        foreach (var line in lines) 
+            text += $"<color=#{line.Value.Color}><alpha=#{opacity[Mathf.Clamp(line.Value.OpacityIndex, 0, opacity.Length - 1)]}>{line.Value.Text}\n</color>";
         TextMesh.text = text;
     }
 
-    private class Line(string text, int opacityIndex, float lineFadeoutDelay)
+    private class Line(string text, string color, int opacityIndex, float lineFadeoutDelay)
     {
         public string Text = text;
+        public string Color = color;
         public int OpacityIndex = opacityIndex;
         public float LineFadeoutDelay = lineFadeoutDelay;
     }

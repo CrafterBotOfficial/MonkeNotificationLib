@@ -67,6 +67,9 @@
         <Reference Include="UnityEngine.UI">
             <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UI.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.UIElementsModule">
             <HintPath>$(GORILLATAG_PATH)/Gorilla Tag_Data/Managed/UnityEngine.UIElementsModule.dll</HintPath>
         </Reference>
