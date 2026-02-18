@@ -27,6 +27,13 @@ internal class Main : BaseUnityPlugin
         Instance.Logger.Log(level, message);
     }
 
-    private void OnEnable() { }
-    private void OnDisable() { }
+    private void OnEnable()
+    {
+        NotificationManager.Instance.TextMesh.gameObject.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        NotificationManager.Instance.TextMesh.gameObject.SetActive(false);
+    }
 }
