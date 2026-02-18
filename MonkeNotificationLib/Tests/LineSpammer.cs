@@ -10,7 +10,7 @@ public class LineSpammer : MonoBehaviour
 
     private void Awake()
     {
-        logger = new Notifier("Mod Menu");
+        logger = new Notifier("Log Source");
     }
 
     private void OnGUI()

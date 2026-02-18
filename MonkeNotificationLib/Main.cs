@@ -29,11 +29,11 @@ internal class Main : BaseUnityPlugin
 
     private void OnEnable()
     {
-        NotificationManager.Instance.TextMesh.gameObject.SetActive(true);
+        NotificationManager.Instance?.TextMesh?.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
-        NotificationManager.Instance.TextMesh.gameObject.SetActive(false);
+        NotificationManager.Instance?.TextMesh?.gameObject.SetActive(false);
     }
 }

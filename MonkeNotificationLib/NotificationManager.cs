@@ -82,7 +82,7 @@ internal class NotificationManager
         yield return new WaitForSeconds(line.LineFadeoutDelay);
         while (line.OpacityIndex < opacity.Length)
         {
-            Main.Log($"{line.OpacityIndex}/{opacity.Length}");
+            // Main.Log($"{line.OpacityIndex}/{opacity.Length}");
             Build();
             line.OpacityIndex++;
             yield return new WaitForSeconds(0.1f);
