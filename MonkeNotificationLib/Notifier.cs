@@ -2,18 +2,11 @@ using System;
 
 namespace MonkeNotificationLib;
 
-public class Notifier : INotifier
+public class Notifier(string name) : INotifier
 {
     private const float MAX_FADEOUT_TIME = 5f; // seconds
 
-    protected string name;
-
-    public bool UseDynamicTextTimeout = false;
-
-    public Notifier(string name)
-    {
-        this.name = name;
-    }
+    public bool UseDynamicTextTimeout;
 
     public void Message(string message)
     {

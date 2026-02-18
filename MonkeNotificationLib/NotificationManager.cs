@@ -49,11 +49,12 @@ internal class NotificationManager
         var container = new GameObject().transform;
         container.SetParent(VRRigCache.Instance.localRig.transform.Find("rig/head"));
         container.localScale = Vector3.one * .0175f;
-        container.localPosition = new Vector3(-0.55f, -0.3f, 1.604f);
+        container.localPosition = new Vector3(-0.35f, -1.1f, 1.904f);
         container.localRotation = Quaternion.Euler(-0.816f, -0.057f, 1.304f);
 
         TextMesh = container.AddComponent<TextMeshPro>();
         TextMesh.font = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(x => x.name == "UtopiumPixel SDF"); // Todo: extract old font from assetbundle
+        TextMesh.fontSize = 26;
         TextMesh.rectTransform.sizeDelta = new Vector2(100f, 100f);
         TextMesh.richText = true;
         TextMesh.fontMaterial.shader = Shader.Find("GUI/Text Shader");
@@ -86,16 +87,13 @@ internal class NotificationManager
             line.OpacityIndex++;
             yield return new WaitForSeconds(0.1f);
         }
-        lock (lines)
-        {
-            Remove(lineId);
-        }
+        Remove(lineId);
     }
 
     private void Build()
     {
         var text = string.Empty;
-        foreach (var line in lines) 
+        foreach (var line in lines)
             text += $"<color=#{line.Value.Color}><alpha=#{opacity[Mathf.Clamp(line.Value.OpacityIndex, 0, opacity.Length - 1)]}>{line.Value.Text}\n</color>";
         TextMesh.text = text;
     }
