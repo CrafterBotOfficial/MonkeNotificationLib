@@ -3,7 +3,7 @@ using BepInEx.Logging;
 
 namespace MonkeNotificationLib;
 
-[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.1.0")]
+[BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.1.1")]
 internal class Main : BaseUnityPlugin
 {
     public static Main Instance;
