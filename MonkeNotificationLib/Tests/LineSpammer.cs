@@ -8,6 +8,8 @@ public class LineSpammer : MonoBehaviour
 {
     private Notifier logger;
 
+    private bool spam;
+
     private void Awake()
     {
         logger = new Notifier("Log Source");
@@ -19,6 +21,9 @@ public class LineSpammer : MonoBehaviour
         else if (GUILayout.Button("Warning")) logger.Warning("This is a warning");
         else if (GUILayout.Button("Error")) logger.Error("This is an error");
         else if (GUILayout.Button("Long lived")) NotificationController.AppendMessage("Long lived message", 10); // 10 seconds
+
+        spam = GUILayout.Toggle(spam, "Spam");
+        if (spam) logger.Message("Spam");
     }
 }
 

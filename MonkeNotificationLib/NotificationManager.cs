@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -11,8 +13,10 @@ internal class NotificationManager
 
     public TextMeshPro TextMesh;
 
-    private volatile int lineKeyCounter;
-    private ObservableDictionary<int, Line> lines;
+    private int lineKeyCounter;
+    private SortedList<int, Line> lines;
+    private List<int> orderedKeys;
+    private StringBuilder stringBuilder;
 
     private string[] opacity;
 
@@ -26,7 +30,7 @@ internal class NotificationManager
         Instance = this;
 
         lines = [];
-        lines.CollectionChanged += (_, _) => Build();
+        orderedKeys = [];
         opacity = [
             "FF",
             "EE",
@@ -45,6 +49,7 @@ internal class NotificationManager
             "11",
             "00",
         ];
+        stringBuilder = new StringBuilder();
 
         var container = new GameObject().transform;
         container.SetParent(VRRigCache.Instance.localRig.transform.Find("rig/head"));
@@ -70,9 +75,14 @@ internal class NotificationManager
 
     internal void NewLine(string rawText, float lineFadeoutDelay, string color = NotificationController.WHITE)
     {
-        lineKeyCounter++;
-        var line = new Line(rawText, color, 0, lineFadeoutDelay);
-        lines.Insert(lineKeyCounter, line);
+        Line line;
+        lock (lines)
+        {
+            lineKeyCounter++;
+            line = new Line(rawText, color, 0, lineFadeoutDelay);
+            lines.Add(lineKeyCounter, line);
+        }
+        Build();
         Main.Instance.StartCoroutine(FadeLine(line));
     }
 
@@ -82,20 +92,25 @@ internal class NotificationManager
         yield return new WaitForSeconds(line.LineFadeoutDelay);
         while (line.OpacityIndex < opacity.Length)
         {
-            // Main.Log($"{line.OpacityIndex}/{opacity.Length}");
             Build();
             line.OpacityIndex++;
             yield return new WaitForSeconds(0.1f);
         }
         Remove(lineId);
+        Build();
     }
 
     private void Build()
     {
-        var text = string.Empty;
-        foreach (var line in lines)
-            text += $"<color=#{line.Value.Color}><alpha=#{opacity[Mathf.Clamp(line.Value.OpacityIndex, 0, opacity.Length - 1)]}>{line.Value.Text}\n</color>";
-        TextMesh.text = text;
+        stringBuilder.Clear();
+        for (int i = lines.Count - 1; i >= 0; i--)
+        {
+            var line = lines.Values[i];
+            stringBuilder.Append("<color=#").Append(line.Color)
+                .Append("><alpha=#").Append(opacity[Mathf.Clamp(line.OpacityIndex, 0, opacity.Length - 1)])
+                .Append(">").Append(line.Text).Append("\n</color>");
+        }
+        TextMesh.text = stringBuilder.ToString();
     }
 
     private class Line(string text, string color, int opacityIndex, float lineFadeoutDelay)
