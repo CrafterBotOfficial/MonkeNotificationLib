@@ -14,13 +14,11 @@ public static class NotificationController
     /// </summary>
     /// <param name="includeTimeStamp">Default false | Should there be a timestamp?</param>
     /// <param name="fadeOutDelay">How long should the text stay on screen before it begins to fade out?</param>
-    /// <returns>The text that was pulled from the pool. If null the text wasn't shown.</returns>
-    public static Text AppendMessage(string source, string message, bool includeTimeStamp = false, float fadeOutDelay = FADE_DELAY)
+    public static void AppendMessage(string source, string message, bool includeTimeStamp = false, float fadeOutDelay = FADE_DELAY)
     {
         string timeStampt = includeTimeStamp ? $"[{System.DateTime.Now.ToString("hh:mm:ss")} : " : "";
         string messageFormat = $"<b>[{timeStampt}{source}]</b> {message}";
         NotificationManager.Instance?.NewLine(messageFormat, fadeOutDelay); // todo: readd fade out delay
-        return null;
     }
 
     public static void AppendMessage(string source, string message, string color = WHITE, float fadeOutDelay = FADE_DELAY)
@@ -33,11 +31,9 @@ public static class NotificationController
     /// Pulls a text object from the object pool and sets the text to your text.
     /// </summary>
     /// <param name="fadeOutDelay">How long should the text stay on screen before it begins to fade out?</param>
-    /// <returns>The text that was pulled from the pool. If null the text wasn't shown.</returns>
-    public static Text AppendMessage(string message, float fadeOutDelay)
+    public static void AppendMessage(string message, float fadeOutDelay)
     {
         NotificationManager.Instance?.NewLine(message, fadeOutDelay);
-        return null;
     }
 
     public static void AppendMessage(string message, string color = WHITE, float fadeOutDelay = FADE_DELAY)
