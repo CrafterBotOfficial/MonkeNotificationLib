@@ -13,7 +13,11 @@
     <!-- Dependencies -->
     <ItemGroup Condition="'$(CI)'=='TRUE'">
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
-        <PackageReference Publicize="true" Include="gorillatag" Version="1.0.*"/>
+        <PackageReference Publicize="true" Include="gorillatag" Version="1.0.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ColorConvert" Version="1.0.2" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(CI)'!='TRUE'">

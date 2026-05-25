@@ -1,5 +1,3 @@
-using System;
-
 namespace MonkeNotificationLib;
 
 public class Notifier(string name) : INotifier
@@ -8,26 +6,31 @@ public class Notifier(string name) : INotifier
 
     public bool UseDynamicTextTimeout;
 
-    public void Message(string message)
+    public virtual void Debug(string message)
+    {
+        NotificationController.AppendMessage(name, message, color: NotificationController.GetColor("gray"), fadeOutDelay: GetTimeout(message.Length));
+    }
+
+    public virtual void Message(string message)
     {
         NotificationController.AppendMessage(name, message, color: NotificationController.WHITE, fadeOutDelay: GetTimeout(message.Length));
     }
 
-    public void Warning(string message)
+    public virtual void Warning(string message)
     {
         NotificationController.AppendMessage(name, message, NotificationController.GetColor("warning"), fadeOutDelay: GetTimeout(message.Length));
     }
-    public void Error(string message)
+    public virtual void Error(string message)
     {
         NotificationController.AppendMessage(name, message, NotificationController.GetColor("danger"), fadeOutDelay: GetTimeout(message.Length));
     }
 
-    private float GetTimeout(int textLength)
+    public virtual float GetTimeout(int textLength)
     {
         if (UseDynamicTextTimeout)
         {
             float calculatedDelay = NotificationController.FADE_DELAY + (textLength * 0.04f); // Todo: Verify if this feels good in game
-            return Math.Max(calculatedDelay, MAX_FADEOUT_TIME);
+            return System.Math.Max(calculatedDelay, MAX_FADEOUT_TIME);
         }
         return NotificationController.FADE_DELAY;
     }

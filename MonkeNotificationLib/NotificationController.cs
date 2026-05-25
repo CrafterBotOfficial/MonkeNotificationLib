@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 
 namespace MonkeNotificationLib;
 
@@ -40,28 +39,19 @@ public static class NotificationController
     {
         NotificationManager.Instance?.NewLine(message, fadeOutDelay, color);
     }
-    /* Extension methods */
 
-    /// <summary>
-    /// Wraps your string in <color="color"></color>. Read the methods code from the Github page to see the presets. 
-    /// Will break opacity during fadeout
-    /// </summary>
-    [System.Obsolete("Will not function properly due to issues with opacity breaking during fadeout")]
-    public static string WrapColor(this string str, string color)
-    {
-        COLOR_MAP_DICTIONARY.TryGetValue(color.ToLower(), out color);
-        return $"<color=#{color}>{str}</color>";
-    }
+    /* Color Methods */
 
     public static string GetColor(string color) =>
         COLOR_MAP_DICTIONARY.TryGetValue(color.ToLower(), out string value) ? value : color;
 
     private readonly static Dictionary<string, string> COLOR_MAP_DICTIONARY = new Dictionary<string, string>()
     {
-        { "green", "09ff00" },
-        { "red", "ff0800" },
-        { "gray", "ffffff50" },
-        { "warning", "f0ad4e" },
-        { "danger", "d9534f" }
+        { "green",  "09ff00" },
+        { "red",    "ff0800" },
+        { "gray",   "808080" },
+        { "warning","f0ad4e" },
+        { "danger", "d9534f" },
+        { "white",  WHITE    },
     };
 }
