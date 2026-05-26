@@ -30,7 +30,7 @@ public class Notifier(string name) : INotifier
         if (UseDynamicTextTimeout)
         {
             float calculatedDelay = NotificationController.FADE_DELAY + (textLength * 0.04f); // Todo: Verify if this feels good in game
-            return System.Math.Max(calculatedDelay, MAX_FADEOUT_TIME);
+            return System.Math.Clamp(calculatedDelay, 1, MAX_FADEOUT_TIME);
         }
         return NotificationController.FADE_DELAY;
     }
