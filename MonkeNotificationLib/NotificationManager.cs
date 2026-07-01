@@ -102,15 +102,18 @@ internal class NotificationManager
 
     private void Build()
     {
-        stringBuilder.Clear();
-        for (int i = lines.Count - 1; i >= 0; i--)
+        lock (stringBuilder)
         {
-            var line = lines.Values[i];
-            stringBuilder.Append("<color=#").Append(line.Color)
-                .Append("><alpha=#").Append(opacity[Mathf.Clamp(line.OpacityIndex, 0, opacity.Length - 1)])
-                .Append(">").Append(line.Text).Append("\n</color>");
+            stringBuilder.Clear();
+            for (int i = lines.Count - 1; i >= 0; i--)
+            {
+                var line = lines.Values[i];
+                stringBuilder.Append("<color=#").Append(line.Color)
+                    .Append("><alpha=#").Append(opacity[Mathf.Clamp(line.OpacityIndex, 0, opacity.Length - 1)])
+                    .Append(">").Append(line.Text).Append("\n</color>");
+            }
+            TextMesh.SetText(stringBuilder.ToString());
         }
-        TextMesh.text = stringBuilder.ToString();
     }
 
     private class Line(string text, string color, int opacityIndex, float lineFadeoutDelay)
