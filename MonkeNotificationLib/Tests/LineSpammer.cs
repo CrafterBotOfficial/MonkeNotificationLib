@@ -9,6 +9,9 @@ public class LineSpammer : MonoBehaviour
     private Notifier logger;
 
     private bool spam;
+    private bool spamLong;
+    private bool numberedSpam;
+    private int numberedSpamCount;
 
     private void Awake()
     {
@@ -24,6 +27,24 @@ public class LineSpammer : MonoBehaviour
 
         spam = GUILayout.Toggle(spam, "Spam");
         if (spam) logger.Message("Spam");
+
+        spamLong = GUILayout.Toggle(spamLong, "Spam Longer");
+        if (spamLong)
+            logger.Message("""
+                    NullReferenceException: Object reference not set to an instance of an object
+                    Stack trace:
+                    BuilderZoneRenderers.OnZoneChanged () (at <fc6c8fa138054a3f9bf20d57b3a15580>:0)
+                    BuilderZoneRenderers.Start () (at <fc6c8fa138054a3f9bf20d57b3a15580>:0)");
+        """);
+
+        numberedSpam = GUILayout.Toggle(numberedSpam, "Spam but numbered");
+        if (numberedSpam)
+        {
+            numberedSpamCount++;
+            logger.Message(numberedSpamCount.ToString());
+        }
+
+        GUILayout.Label($"Characters: " + NotificationManager.Instance?.TextMesh?.text?.Length);
     }
 }
 

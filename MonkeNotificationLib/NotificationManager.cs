@@ -2,54 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 namespace MonkeNotificationLib;
 
-internal class NotificationManager
+internal class NotificationManager : MonoBehaviour
 {
     public static NotificationManager Instance;
 
+    public const int MAX_VISIBLE_LINES = 45;
+
     public TextMeshPro TextMesh;
 
-    private int lineKeyCounter;
-    private SortedList<int, Line> lines;
-    private List<int> orderedKeys;
+    private List<Line> lines;
     private StringBuilder stringBuilder;
 
     private string[] opacity;
 
-    internal NotificationManager Setup()
+    private void Start()
     {
         if (Instance is not null)
         {
-            // throw new System.Exception("Cannot instantiate multiple NotificationManagers. Use NotificationManager.Instance instead.");
-            return Instance;
+            Destroy(this);
+            return;
         }
         Instance = this;
 
         lines = [];
-        orderedKeys = [];
-        opacity = [
-            "FF",
-            "EE",
-            "DD",
-            "CC",
-            "BB",
-            "AA",
-            "99",
-            "88",
-            "77",
-            "66",
-            "55",
-            "44",
-            "33",
-            "22",
-            "11",
-            "00",
-        ];
-        stringBuilder = new StringBuilder();
+        opacity = ["FF", "EE", "DD", "CC", "BB", "AA", "99", "88", "77", "66", "55", "44", "33", "22", "11", "00",];
+        stringBuilder = new StringBuilder(40_000);
 
         var container = new GameObject().transform;
         container.SetParent(VRRigCache.Instance.localRig.transform.Find("rig/head"));
@@ -63,14 +46,21 @@ internal class NotificationManager
         TextMesh.rectTransform.sizeDelta = new Vector2(100f, 100f);
         TextMesh.richText = true;
         TextMesh.fontMaterial.shader = Shader.Find("GUI/Text Shader");
+        TextMesh.maxVisibleCharacters = 10_000;
 
-        return this;
+        Loop().ContinueWith(task =>
+        {
+            Main.Log(task.Exception, BepInEx.Logging.LogLevel.Error);
+        }, TaskContinuationOptions.OnlyOnFaulted);
     }
 
-    private void Remove(int id)
+    private async Task Loop()
     {
-        if (!lines.ContainsKey(id)) return;
-        lines.Remove(id);
+        while (true)
+        {
+            if (lines.Count != 0) Build();
+            await Task.Delay(150);
+        }
     }
 
     internal void NewLine(string rawText, float lineFadeoutDelay, string color = NotificationController.WHITE)
@@ -78,42 +68,38 @@ internal class NotificationManager
         Line line;
         lock (lines)
         {
-            lineKeyCounter++;
             line = new Line(rawText, color, 0, lineFadeoutDelay);
-            lines.Add(lineKeyCounter, line);
+            lines.Insert(0, line);
         }
         Build();
-        Main.Instance.StartCoroutine(FadeLine(line));
+        StartCoroutine(FadeLine(line));
     }
 
     private IEnumerator FadeLine(Line line)
     {
-        var lineId = lineKeyCounter;
         yield return new WaitForSeconds(line.LineFadeoutDelay);
         while (line.OpacityIndex < opacity.Length)
         {
-            Build();
             line.OpacityIndex++;
             yield return new WaitForSeconds(0.1f);
         }
-        Remove(lineId);
-        Build();
+        lines.Remove(line);
     }
 
     private void Build()
     {
-        lock (stringBuilder)
+        stringBuilder.Clear();
+        int depth = Mathf.Clamp(lines.Count, 0, MAX_VISIBLE_LINES) - 1;
+        for (int i = 0; i <= depth; i++)
         {
-            stringBuilder.Clear();
-            for (int i = lines.Count - 1; i >= 0; i--)
-            {
-                var line = lines.Values[i];
-                stringBuilder.Append("<color=#").Append(line.Color)
-                    .Append("><alpha=#").Append(opacity[Mathf.Clamp(line.OpacityIndex, 0, opacity.Length - 1)])
-                    .Append(">").Append(line.Text).Append("\n</color>");
-            }
-            TextMesh.SetText(stringBuilder.ToString());
+            var line = lines[i];
+            stringBuilder
+                .Append("<color=#").Append(line.Color)
+                .Append("><alpha=#").Append(opacity[Mathf.Clamp(line.OpacityIndex, 0, opacity.Length - 1)])
+                .Append(">").Append(line.Text).Append("\n</color>");
         }
+
+        TextMesh.SetText(stringBuilder.ToString());
     }
 
     private class Line(string text, string color, int opacityIndex, float lineFadeoutDelay)
