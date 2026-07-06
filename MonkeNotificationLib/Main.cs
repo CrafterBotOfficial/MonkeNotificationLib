@@ -6,25 +6,23 @@ namespace MonkeNotificationLib;
 [BepInPlugin("crafterbot.notificationlib", "MonkeNotificationLib", "1.1.1")]
 internal class Main : BaseUnityPlugin
 {
-    public static Main Instance;
-
-    private NotificationManager manager;
+    private static Main instance;
 
     private void Start()
     {
-        Instance = this;
+        instance = this;
         GorillaTagger.OnPlayerSpawned(() =>
         {
-            manager = new NotificationManager().Setup();
+            new UnityEngine.GameObject("notificationlib", typeof(NotificationManager));
 #if DEBUG
             gameObject.AddComponent<Tests.LineSpammer>();
 #endif
         });
     }
 
-    public static void Log(string message, LogLevel level = LogLevel.Info)
+    public static void Log(object message, LogLevel level = LogLevel.Info)
     {
-        Instance.Logger.Log(level, message);
+        instance.Logger.Log(level, message);
     }
 
     private void OnEnable()
